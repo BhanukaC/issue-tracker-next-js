@@ -17,6 +17,7 @@ const IssueDetailPage = async ({ params: { id } }: Props) => {
     where: { id: parseInt(id) },
   });
   if (!issue) notFound();
+
   return (
     <div>
       <Heading>{issue.title}</Heading>
