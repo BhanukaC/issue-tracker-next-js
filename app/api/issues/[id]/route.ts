@@ -6,7 +6,7 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-    const id = (await params).id;
+  const id = (await params).id;
   const body = await request.json();
   const validation = issueSchema.safeParse(body);
   if (!validation.success)
@@ -46,4 +46,24 @@ export async function GET(
   }
 
   return NextResponse.json(issue);
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const id = (await params).id;
+  const issue = await prisma.issue.findUnique({
+    where: { id: parseInt(id) },
+  });
+
+  if (!issue) {
+    return NextResponse.json({ error: "Issue not found" }, { status: 404 });
+  }
+
+  await prisma.issue.delete({
+    where: { id: parseInt(id) },
+  });
+
+  return NextResponse.json({ message: "Issue deleted successfully" });
 }
