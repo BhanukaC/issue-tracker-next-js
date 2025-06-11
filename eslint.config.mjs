@@ -10,6 +10,18 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  // ⛔ Ignore generated or external files
+  {
+    ignores: [
+      "**/node_modules/**",
+      "**/.next/**",
+      "**/dist/**",
+      "**/build/**",
+      "**/app/generated/**", // Prisma and other generated files
+    ],
+  },
+
+  // ✅ Apply Next.js + TypeScript config to your own code
   ...compat.extends("next/core-web-vitals", "next/typescript"),
 ];
 

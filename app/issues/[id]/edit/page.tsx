@@ -31,7 +31,7 @@ const EditIssuePage = ({ params }: Props) => {
                 return;
             }
             setIssue(response.data);
-        } catch (error) {
+        } catch {
             notFound();
         } finally {
             setLoading(false);
@@ -43,7 +43,7 @@ const EditIssuePage = ({ params }: Props) => {
 
     useEffect(() => {
         fetchIssue();
-    }, []);
+    });
 
     if (loading) {
         return <IssueFormSkeleton />;
