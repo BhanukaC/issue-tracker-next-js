@@ -1,58 +1,50 @@
-'use client';
-import { Issue } from '@/app/generated/prisma';
-import axios from 'axios';
-import dynamic from 'next/dynamic';
-import { notFound } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import IssueFormSkeleton from './loading';
+"use client";
+import { Issue } from "@/app/generated/prisma";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import dynamic from "next/dynamic";
+import { notFound } from "next/navigation";
+import IssueFormSkeleton from "./loading";
+import { useEffect, useState } from "react";
 
-
-interface Props{
-    params: Promise<{
-        id: string;
-    }>;
+interface Props {
+  params: Promise<{
+    id: string;
+  }>;
 }
 
 const IssueForm = dynamic(() => import("@/app/issues/_components/IssueForm"), {
-    ssr: false,
+  ssr: false,
   loading: () => <IssueFormSkeleton />,
 });
 
-
 const EditIssuePage = ({ params }: Props) => {
-    const [issue, setIssue] = useState<Issue | null>(null);
-    const [loading, setLoading] = useState(true);
+  const [id, setId] = useState<string | null>(null);
 
-    const fetchIssue = async () => {
-        try {
-            const response = await axios.get(`/api/issues/${(await params).id}`);
-            if (!response.data) {
-                notFound();
-                return;
-            }
-            setIssue(response.data);
-        } catch {
-            notFound();
-        } finally {
-            setLoading(false);
-            if( !issue) {
-                notFound();
-            }
-        }
-    };
-
-    useEffect(() => {
-        fetchIssue();
+  useEffect(() => {
+    params.then((p) => {
+      setId(p.id);
     });
+  }, [params]);
 
-    if (loading) {
-        return <IssueFormSkeleton />;
-    }
-    if(!issue) notFound();
+  const {
+    data: issue,
+    error,
+    isLoading,
+  } = useQuery<Issue>({
+    queryKey: ["issue", id],
+    queryFn: () => axios.get(`/api/issues/${id}`).then((res) => res.data),
+    enabled: !!id, // wait until id is set
+    staleTime: 1000 * 60, // 60s
+    retry: 3,
+  });
 
-    return (
-        <IssueForm issue={issue!} />
-    );
-}
+  if (isLoading) {
+    return <IssueFormSkeleton />;
+  }
+  if (error) notFound();
 
-export default EditIssuePage
+  return <IssueForm issue={issue} />;
+};
+
+export default EditIssuePage;
