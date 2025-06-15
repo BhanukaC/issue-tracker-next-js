@@ -29,7 +29,7 @@ const Pagination = ({ itemCount, pageSize, currentPage }: Props) => {
     router.push("?" + params.toString());
   };
   return (
-    <Flex align="center" gap="2">
+    <Flex align="center" gap="2" justify="center">
       <Text size="2">
         Page {currentPage} of {pageCount}{" "}
       </Text>
