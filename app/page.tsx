@@ -31,3 +31,6 @@ export const metadata: Metadata = {
   title: "Issue Tracker - Dashboard",
   description: "View a summary of issues and their statuses",
 };
+
+export const dynamic = "force-dynamic";
+// Force dynamic rendering for this page
