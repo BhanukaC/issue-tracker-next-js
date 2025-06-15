@@ -20,7 +20,7 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
       await axios.patch("/api/issues/" + issue.id, {
         assignedToUserId: userId || null,
       });
-    } catch (error) {
+    } catch {
       toast.error("Failed to assign user. Please try again later.");
     }
   };

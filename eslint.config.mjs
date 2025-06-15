@@ -23,6 +23,20 @@ const eslintConfig = [
 
   // ✅ Apply Next.js + TypeScript config to your own code
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+
+  // ✅ Custom rule overrides
+  {
+    files: ["**/*.ts", "**/*.tsx"],
+    rules: {
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+        },
+      ],
+    },
+  },
 ];
 
 export default eslintConfig;
